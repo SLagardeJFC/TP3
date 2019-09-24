@@ -9,18 +9,23 @@ import java.util.Vector;
  * final de ce joueur
  */
 public class SinglePlayerGame {
-        Vector<Integer> score;
-        int quillesRestantes=10;
-        int boulesRestantes=2;
-        int indice=-1;
-        boolean sp=false;
-        boolean st=false;
+        int t;
+        int score;
+        int quilles;
+        boolean sec;
+        int compteDouble;
     
+        final Integer MAX = 300;
+        
 	/**
 	 * Constructeur
 	 */
 	public SinglePlayerGame() {
-            score=new Vector<Integer>();
+            this.t=10;
+            this.score=0;
+            this.quilles=10;
+            this.sec=false;
+            this.compteDouble=0;
             
             
 	}
@@ -32,41 +37,56 @@ public class SinglePlayerGame {
 	 * ce lancé
 	 */
 	public void lancer(int nombreDeQuillesAbattues) {
-            indice+=1;
-            quillesRestantes-=nombreDeQuillesAbattues;
+            int cpt=0;
+            quilles-=nombreDeQuillesAbattues;
             
-            if(sp==true){
-                spare(nombreDeQuillesAbattues);
-                //score.add(nombreDeQuillesAbattues);
-            }
-            
-            if(st==true){
-                
-            }
-            if(nombreDeQuillesAbattues==10 && boulesRestantes==1){
-                sp=true;
-                score.add(nombreDeQuillesAbattues);
-                boulesRestantes=2;
-            }
-            
-            else{
-                boulesRestantes-=1;
-                score.add(nombreDeQuillesAbattues);
-                if(boulesRestantes==0){
-                    boulesRestantes=2;
+            if(quilles==0){
+                if(sec){
+                    //spare
+                    sec=false;
+                    if(t==1){
+                        t++;
+                        sec=true;
+                    }
+                    
+                    else{
+                        cpt=1;
+                    }
+                }else{
+                    //strike
+                    if(t==1){
+                        t++;
+                    }else{
+                        cpt=2;
+                    }
+                }
+            }else{
+                if(sec){
+                    sec=false;
+                }else{
+                    sec=true;
                 }
             }
-	}
+            
+            
 
-        public void spare(int x){
-            int sc = score.get(indice-1)+x;
-            score.set(indice-1, sc);
-            //System.out.println(score);
-            //score.add(x);
-            sp=false;
+            if(compteDouble!=0){
+                if(compteDouble>=3 && cpt==2){
+                    score+=nombreDeQuillesAbattues*3;
+                }else{
+                    score+=nombreDeQuillesAbattues*2;
+                }
+                compteDouble--;
+            }else{
+                score+=nombreDeQuillesAbattues;
+            }
+            compteDouble+=cpt;
+            if(sec==false){
+                t--;
+                quilles=10;
+            }
+        
         }
-        
-        
 	/**
 	 * Cette méthode donne le score du joueur
 	 *
@@ -74,11 +94,7 @@ public class SinglePlayerGame {
 	 */
 	public int score() {
             try{
-                int s=0 ;
-                for(int i=0;i<score.size();i++){
-                    s+=score.get(i);
-                }
-                return s;
+                return score;
             }catch(Exception e){
                 throw new UnsupportedOperationException("Pas encore implémenté");
             }
