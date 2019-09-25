@@ -14,6 +14,7 @@ public class SinglePlayerGame {
         int quilles;
         boolean sec;
         int compteDouble;
+        int cpt;
     
         final Integer MAX = 300;
         
@@ -26,10 +27,31 @@ public class SinglePlayerGame {
             this.quilles=10;
             this.sec=false;
             this.compteDouble=0;
+            this.cpt=0;
             
             
 	}
 
+        public void spare(){
+            sec=false;
+            if(t==1){
+                t++;
+                sec=true;
+            }
+            else{
+                cpt=1;
+                }
+        }
+
+        public void strike(){
+            if(t==1){
+                t++;
+            }
+            else{
+                cpt=2;
+            }
+        }
+        
 	/**
 	 * Cette méthode doit être appelée à chaque lancé de boule
 	 *
@@ -37,39 +59,22 @@ public class SinglePlayerGame {
 	 * ce lancé
 	 */
 	public void lancer(int nombreDeQuillesAbattues) {
-            int cpt=0;
+            //int cpt=0;
             quilles-=nombreDeQuillesAbattues;
             
             if(quilles==0){
                 if(sec){
+                    //On a 0 boules restantes  et le booléen sec est vrai donc on a tombé toutes les quilles
                     //spare
-                    sec=false;
-                    if(t==1){
-                        t++;
-                        sec=true;
-                    }
-                    
-                    else{
-                        cpt=1;
-                    }
+                    spare();
                 }else{
                     //strike
-                    if(t==1){
-                        t++;
-                    }else{
-                        cpt=2;
-                    }
+                    strike();
                 }
             }else{
-                if(sec){
-                    sec=false;
-                }else{
-                    sec=true;
-                }
+                sec=!sec;
             }
             
-            
-
             if(compteDouble!=0){
                 if(compteDouble>=3 && cpt==2){
                     score+=nombreDeQuillesAbattues*3;
@@ -85,7 +90,7 @@ public class SinglePlayerGame {
                 t--;
                 quilles=10;
             }
-        
+            cpt=0;
         }
 	/**
 	 * Cette méthode donne le score du joueur
